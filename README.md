@@ -9,7 +9,7 @@ A PHP/MySQL web portal for aggregating UK law firm articles via RSS and publishi
 - **Three user roles**: Admin (full access), Manager (content & feeds), Subscriber (own firm only)
 - **Two-factor authentication** — 6-digit one-time code emailed on every login; codes also written to `logs/2fa_codes.log` as a fallback
 - **2FA log viewer** — admin page to retrieve codes when email delivery fails
-- **Firm profiles** — each subscriber firm has a rich profile (logo, tagline, description, specialisms, address, social links) with a profile-completeness score
+- **Firm profiles** — each subscriber firm has a rich profile (logo, tagline, description, specialisms, address, social links) with a profile-completeness score; editable by the subscriber themselves or by any admin/manager
 - **Author profiles** — name, position, bio, photo, LinkedIn URL, official profile URL; matched automatically from RSS `<author>` fields
 - **RSS feed management** — add feeds linked to a subscriber and a default author; fetch and cache articles; optional per-feed full-text crawl
 - **Content back-fill** — crawl original article URLs to retrieve full HTML content and featured images for cached articles missing them
@@ -68,21 +68,10 @@ Multiple Ghost instances are supported.
 
 ### 4. Web server
 
-**Apache** — create `.htaccess` in the portal root:
-
-```apache
-Options -Indexes
-RewriteEngine On
-RewriteRule ^config/ - [F,L]
-RewriteRule ^includes/ - [F,L]
-```
-
-**Nginx:**
+**Apache** — a `.htaccess` is included in the repository root covering directory listing, sensitive path blocking, security headers, and static asset caching. For Nginx, add equivalent rules manually:
 
 ```nginx
-location ~* ^/(config|includes)/ {
-    deny all;
-}
+location ~* ^/(config|includes|logs)/ { deny all; }
 ```
 
 Ensure `uploads/firm-logos/` and `uploads/author-photos/` are writable by the web server.
@@ -114,6 +103,7 @@ legalportal/
 │   ├── users.php               ← User CRUD (admin only)
 │   ├── authors.php             ← Author profile management
 │   ├── firms.php               ← Firm profiles overview (admin/manager)
+│   ├── firm_edit.php           ← Edit any subscriber's firm profile (admin/manager)
 │   ├── settings.php            ← System settings + Ghost config
 │   └── 2fa_log.php             ← View live/recent 2FA codes (admin only)
 ├── feeds/
@@ -184,7 +174,7 @@ legalportal/
 ## Typical Workflow
 
 1. **Admin** creates subscriber accounts (one per law firm) and sets up Ghost CMS config
-2. **Subscriber** logs in and fills out their firm profile (`subscriber/firm.php`)
+2. **Subscriber** logs in and fills out their firm profile, **or** an admin/manager does it via **Admin → Firms → Edit**
 3. **Manager** adds author profiles for each firm's lawyers
 4. **Manager** adds RSS feed URLs, linking each to a subscriber and a default author
 5. **Manager** clicks "Fetch Feeds" → articles cached in the database
