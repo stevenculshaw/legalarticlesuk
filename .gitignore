@@ -1,0 +1,19 @@
+# Runtime logs
+logs/
+feeds/php_errorlog
+
+# User uploads (not part of the codebase)
+uploads/
+
+# Claude Code local settings
+.claude/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Full database dumps containing live data
+*.sql.bak
+dberwgtie3swso.sql
