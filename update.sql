@@ -1,0 +1,9 @@
+-- UK Legal Articles Portal — Update Script
+-- Feature: Admin/manager firm profile editing
+--
+-- No database schema changes required for this update.
+--
+-- Files to deploy to your server:
+--   NEW     admin/firm_edit.php
+--   UPDATED admin/firms.php
+--   UPDATED firms/profile.php

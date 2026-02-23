@@ -189,6 +189,7 @@ include dirname(__DIR__) . '/includes/header.php';
   <?php if (isSubscriber()): ?>
   <a href="<?= BASE_URL ?>/subscriber/firm.php" class="btn btn-ghost btn-sm">✏ Edit Profile</a>
   <?php elseif (isManager()): ?>
+  <a href="<?= BASE_URL ?>/admin/firm_edit.php?subscriber_id=<?= $sid ?>" class="btn btn-primary btn-sm">✏ Edit Profile</a>
   <a href="<?= BASE_URL ?>/admin/authors.php?subscriber=<?= $sid ?>" class="btn btn-ghost btn-sm">✍ Authors</a>
   <?php endif; ?>
   <?php if ($unpushed > 0 && isManager()): ?>

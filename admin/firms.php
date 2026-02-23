@@ -183,10 +183,9 @@ include dirname(__DIR__) . '/includes/header.php';
       <!-- Actions -->
       <div style="display:flex;gap:.5rem;margin-top:.85rem;flex-wrap:wrap;">
         <?php if ($f['profile_id']): ?>
-        <a href="<?= BASE_URL ?>/firms/profile.php?id=<?= $f['subscriber_id'] ?>" class="btn btn-sm btn-gold">👁 View Profile</a>
-        <?php else: ?>
-        <span class="btn btn-sm" style="background:#f3f4f6;color:var(--muted);cursor:default;">No profile</span>
+        <a href="<?= BASE_URL ?>/firms/profile.php?id=<?= $f['subscriber_id'] ?>" class="btn btn-sm btn-gold">👁 View</a>
         <?php endif; ?>
+        <a href="<?= BASE_URL ?>/admin/firm_edit.php?subscriber_id=<?= $f['subscriber_id'] ?>" class="btn btn-sm btn-primary">✏ Edit</a>
         <a href="<?= BASE_URL ?>/admin/users.php" class="btn btn-sm btn-ghost">👤 User</a>
         <a href="<?= BASE_URL ?>/admin/authors.php?subscriber_id=<?= $f['subscriber_id'] ?>" class="btn btn-sm btn-ghost">✍ Authors</a>
       </div>
