@@ -1,0 +1,67 @@
+# ============================================================
+# UK Legal Articles Portal — Apache configuration
+# ============================================================
+
+# ── Directory listings ────────────────────────────────────────
+Options -Indexes
+
+# ── Rewrite engine ───────────────────────────────────────────
+RewriteEngine On
+
+# ── Block sensitive directories ──────────────────────────────
+# config/ and includes/ must never be served directly
+RewriteRule ^config(/|$)   - [F,L]
+RewriteRule ^includes(/|$) - [F,L]
+RewriteRule ^logs(/|$)     - [F,L]
+RewriteRule ^\.git(/|$)    - [F,L]
+
+# ── Block sensitive file types ───────────────────────────────
+<FilesMatch "\.(sql|log|sh|bak|env)$">
+    Require all denied
+</FilesMatch>
+
+# Block dot-files (e.g. .gitignore, .env, .DS_Store)
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+
+# ── Security headers ─────────────────────────────────────────
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options  "nosniff"
+    Header always set X-Frame-Options         "SAMEORIGIN"
+    Header always set Referrer-Policy         "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy      "geolocation=(), microphone=(), camera=()"
+
+    # Remove server signature from responses
+    Header always unset X-Powered-By
+    Header always unset Server
+</IfModule>
+
+# ── PHP hardening ────────────────────────────────────────────
+<IfModule mod_php.c>
+    php_flag display_errors      Off
+    php_flag log_errors          On
+    php_flag expose_php          Off
+    php_value session.cookie_httponly 1
+    php_value session.cookie_samesite Lax
+    php_value session.use_strict_mode 1
+</IfModule>
+
+# ── Deny PHP execution inside uploads/ ───────────────────────
+# Belt-and-braces: uploads/.htaccess also covers this
+<FilesMatch "\.php$">
+    <If "%{REQUEST_URI} =~ m|^/uploads/|">
+        Require all denied
+    </If>
+</FilesMatch>
+
+# ── Cache static assets ──────────────────────────────────────
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css              "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType image/jpeg            "access plus 1 month"
+    ExpiresByType image/png             "access plus 1 month"
+    ExpiresByType image/webp            "access plus 1 month"
+    ExpiresByType image/svg+xml         "access plus 1 month"
+</IfModule>
